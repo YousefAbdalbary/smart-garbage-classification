@@ -1,0 +1,165 @@
+# 📘 Smart Garbage Classification using EfficientNetV2-S
+
+## 📌 Project Overview
+
+This project implements a **deep learning-based garbage classification system** using **EfficientNetV2-S pretrained on ImageNet** and fine-tuned on a real-world garbage image dataset.
+
+The model classifies images into 6 categories:
+
+* Cardboard
+* Glass
+* Metal
+* Paper
+* Plastic
+* Trash
+
+---
+
+## 📂 Dataset
+
+📥 Kaggle Dataset:
+[https://www.kaggle.com/datasets/asdasdasasdas/garbage-classification](https://www.kaggle.com/datasets/asdasdasasdas/garbage-classification)
+
+The dataset contains labeled images of garbage categorized into 6 classes.
+
+### Class Distribution:
+
+| Class     | Samples |
+| --------- | ------- |
+| Cardboard | 403     |
+| Glass     | 501     |
+| Metal     | 410     |
+| Paper     | 594     |
+| Plastic   | 482     |
+| Trash     | 137     |
+
+⚠️ The dataset is imbalanced (Trash has fewer samples), so class weights were applied during training.
+
+---
+
+## 🧠 Model Architecture
+
+### EfficientNetV2-S
+
+* Pretrained on ImageNet (1.2M images)
+* Lightweight yet powerful
+* Improved training efficiency over original EfficientNet
+* Better generalization with fewer parameters
+
+```python
+from torchvision.models import efficientnet_v2_s
+
+model = efficientnet_v2_s(weights="IMAGENET1K_V1")
+```
+
+The final classification layer was replaced to match 6 output classes.
+
+---
+
+## 🔧 Training Strategy
+
+### Transfer Learning
+
+* Loaded pretrained weights
+* Replaced classifier layer
+* Fine-tuned entire network
+
+### Loss Function
+
+* CrossEntropyLoss with class weights
+* Helps handle class imbalance
+
+### Optimizer
+
+* AdamW
+* Learning rate = 1e-5 during fine-tuning
+
+### Scheduler
+
+* ReduceLROnPlateau
+* Automatically reduces learning rate when validation accuracy stagnates
+
+### Mixed Precision Training
+
+* torch.amp.autocast("cuda")
+* GradScaler for faster GPU training
+
+### Gradient Clipping
+
+* Prevents unstable updates during fine-tuning
+
+---
+
+## 📊 Results
+
+### Best Validation Accuracy
+
+🎯 **96.25%**
+
+### Training Behavior
+
+* Rapid convergence
+* Stable validation improvement
+* No severe overfitting
+* Best model saved at epoch 8
+
+---
+
+## 📈 Evaluation Metrics
+
+### Confusion Matrix
+
+* Strong diagonal dominance
+* Minor confusion between visually similar classes
+
+### Classification Report
+
+* High Precision and Recall
+* Balanced F1-score across classes
+* Improved performance on minority class (Trash)
+
+---
+
+## 🚀 Performance Summary
+
+| Metric            | Result           |
+| ----------------- | ---------------- |
+| Best Accuracy     | 96.25%           |
+| Model             | EfficientNetV2-S |
+| Transfer Learning | Yes              |
+| Fine-Tuning       | Full             |
+| Class Weights     | Applied          |
+| Mixed Precision   | Enabled          |
+
+---
+
+## 🛠 Requirements
+
+```
+torch
+torchvision
+numpy
+scikit-learn
+matplotlib
+seaborn
+```
+
+---
+
+## 💡 Future Improvements
+
+* Add Grad-CAM visualizations
+* Deploy with Streamlit
+* Convert to ONNX / TensorRT
+* Mobile deployment
+
+---
+
+# 🏆 Conclusion
+
+EfficientNetV2-S combined with transfer learning and fine-tuning achieved high performance (96.25%) on the Garbage Classification dataset.
+
+The model demonstrates strong generalization and robustness despite dataset imbalance.
+
+---
+
